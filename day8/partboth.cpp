@@ -54,6 +54,57 @@ bool check_neighbors_down(const std::vector<std::vector<uint32_t> >& grid, uint3
     return true;
 }
 
+uint32_t count_neighbors_right(const std::vector<std::vector<uint32_t> >& grid, uint32_t i, uint32_t j) {
+    uint32_t count = 0;
+    for(size_t k = j + 1; k < grid[i].size(); k++) {
+        count++;
+        if(grid[i][k] >= grid [i][j]) {
+            break;
+        }
+    }
+
+    return count;
+}
+
+uint32_t count_neighbors_left(const std::vector<std::vector<uint32_t> >& grid, uint32_t i, uint32_t j) {
+    uint32_t count = 0;
+
+    for(int k = j - 1; k >= 0 ; k--) {
+        count++;
+        if(grid[i][k] >= grid [i][j]) {
+            break;
+        }
+    }
+
+    return count;
+}
+
+uint32_t count_neighbors_up(const std::vector<std::vector<uint32_t> >& grid, uint32_t i, uint32_t j) {
+    uint32_t count = 0;
+
+    for(int k = i - 1; k >= 0 ; k--) {
+        count++;
+        if(grid[k][j] >= grid [i][j]) {
+            break;
+        }
+    }
+
+    return count;
+}
+
+uint32_t count_neighbors_down(const std::vector<std::vector<uint32_t> >& grid, uint32_t i, uint32_t j) {
+    uint32_t count = 0;
+
+    for(size_t k = i + 1; k < grid.size() ; k++) {
+        count++;
+        if(grid[k][j] >= grid [i][j]) {
+            break;
+        }
+    }
+
+    return count;
+}
+
 
 int main() { 
 
@@ -79,6 +130,7 @@ int main() {
         grid.push_back(row);
     }
 
+    // Part 1
     for(size_t i = 1; i < grid.size() - 1; i++) {
         for(size_t j = 1; j < grid[i].size() - 1; j++) {
             if(check_neighbors_right(grid, i, j)) {
@@ -98,6 +150,22 @@ int main() {
 
     uint32_t grid_count = (x_count * y_count) - ((x_count - 2) * (y_count - 2));
     std::cout << inner_count << " " << grid_count << std::endl;
+
+    // Part 2
+
+    uint32_t total_scenic_score = 0;
+    uint32_t current_scenic_score = 0;
+    for(size_t i = 1; i < grid.size() - 1; i++) {
+        for(size_t j = 1; j < grid[i].size() - 1; j++) {
+            current_scenic_score = count_neighbors_right(grid, i, j) * count_neighbors_left(grid, i, j) * count_neighbors_down(grid, i, j) * count_neighbors_up(grid, i, j);
+ 
+            if(current_scenic_score > total_scenic_score) {
+                total_scenic_score = current_scenic_score;
+            }
+        }
+    }
+
+    std::cout << total_scenic_score << std::endl;
 
     return 0;
 }
